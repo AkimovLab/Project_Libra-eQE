@@ -1,0 +1,8 @@
+&PROJWFC
+prefix='pwscf',
+outdir='./'
+degauss = 0.02
+Emin=-10, Emax=10.0, DeltaE=0.1
+filpdos='fdos.dat'
+filproj='proj.dat'
+/
