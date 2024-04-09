@@ -1,0 +1,38 @@
+#!/bin/sh -l
+#SBATCH --account=alexeyak
+#SBATCH --quiet
+#SBATCH --partition=valhalla  --qos=valhalla
+#SBATCH --clusters=faculty
+##SBATCH --partition=general-compute  --qos=general-compute
+##SBATCH --clusters=ub-hpc
+#SBATCH --time=72:00:00
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=12
+##SBATCH --ntasks-per-node=4
+#SBATCH --cpus-per-task=1
+#SBATCH --constraint=LEGACY
+#SBATCH --mem=64000
+##SBATCH --nodelist=cpn-m23-24
+##SBATCH --nodelist=cpn-f13-36
+echo "SLURM_JOBID="$SLURM_JOBID
+echo "SLURM_JOB_NODELIST="$SLURM_JOB_NODELIST
+echo "SLURM_NNODES="$SLURM_NNODES
+echo "SLURMTMPDIR="$SLURMTMPDIR
+echo "working directory="$SLURM_SUBMIT_DIR
+
+
+NPROCS=`srun --nodes=${SLURM_NNODES} bash -c 'hostname' |wc -l`
+echo NPROCS=$NPROCS
+
+lscpu
+module load ccrsoft/legacy
+
+module use /projects/academic/cyberwksp21/Modules
+module load eqe_nonadiabatic
+
+export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
+
+mpirun -np 48  fdepw.x  -ni 8 -in pentacene-221
+
+
+
